@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<h1 id="title">TITLE</h1>
+		<button id="execute-btn">Execute</button>
+
+		<script>
+			const titleEle = document.getElementById('title');
+
+			function* generateNumbers() {
+				while (true) {
+					for (let i = 0; i <= 2; i++) {
+						yield i;
+					}
+				}
+			}
+
+			const numberGenerator = generateNumbers();
+			const colors = ['red', 'blue', 'green'];
+
+			setInterval(() => {
+				const color = colors[numberGenerator.next().value];
+
+				titleEle.style = `color: ${color}`;
+			}, 1000);
+
+			const btnEle = document.getElementById('execute-btn');
+
+			function wait(ms, callback) {
+				let start = Date.now();
+				let now = start;
+
+				while (now - start < ms) {
+					now = Date.now();
+				}
+
+				console.log(callback);
+			}
+
+			function startWorker(callback) {
+				const myWorker = new Worker('worker.js');
+				myWorker.postMessage({ action: 'wait', callback });
+			}
+
+			btnEle.addEventListener('click', () => {
+				// startWorker('finished wait');
+				wait(5000)
+
+				console.log('btn click');
+			});
+		</script>
+	</body>
+</html>
